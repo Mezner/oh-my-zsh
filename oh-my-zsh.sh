@@ -1,9 +1,3 @@
-# Check for updates on initial load...
-if [ "$DISABLE_AUTO_UPDATE" != "true" ]
-then
-  /usr/bin/env zsh $ZSH/tools/check_for_upgrade.sh
-fi
-
 # Initializes Oh My Zsh
 
 # add a function path
@@ -51,3 +45,4 @@ else
   fi
 fi
 
+source "$ZSH/funcs/vmware.zsh"
