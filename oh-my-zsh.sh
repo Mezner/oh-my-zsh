@@ -45,4 +45,6 @@ else
   fi
 fi
 
-source "$ZSH/funcs/vmware.zsh"
+funcs=($ZSH/funcs/*zsh)
+for func ($funcs) source $func
+
