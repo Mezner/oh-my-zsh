@@ -4,7 +4,7 @@ function gerrit-review {
         BRANCH=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD) | sed 's/^[a-z]*\///')
     fi  
 
-    P_REVIEWERS=("${(@f)$(ssh $GERRIT_SERVER -p $GERRIT_PORT gerrit ls-members $1 | awk '{print $2}' | grep -v username)}")
+    P_REVIEWERS=("${(@f)$(ssh $SERVER_GERRIT -p $PORT_GERRIT gerrit ls-members $1 | awk '{print $2}' | grep -v username)}")
     local reviewers
     for reviewer in $P_REVIEWERS
         do reviewers="--reviewer=$reviewer $reviewers"
