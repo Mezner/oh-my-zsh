@@ -1,5 +1,3 @@
-echo "Loading general functions..."
-
 # opens a browser window
 function browse {
     if [[ $platform == 'cygwin' ]]; then
@@ -37,4 +35,9 @@ function ifind()
 function drop-caches()
 {
     sudo bash -c "echo 3 > /proc/sys/vm/drop_caches"
+}
+
+function resource()
+{
+    source ~/.zshrc
 }
