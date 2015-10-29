@@ -11,6 +11,13 @@ function clearlog()
     adb lolcat -c
 }
 
+function android-alllogs() {
+    adb logcat -v threadtime -b main -d > log-main.txt
+    adb logcat -v threadtime -b amazon_main -d > log-amazon_main.txt
+    adb logcat -v threadtime -b radio -d > log-radio.txt
+    adb logcat -v threadtime -b events -d > log-events.txt
+}
+
 function mezlog()
 {
     while true
@@ -37,6 +44,11 @@ function gclog()
 function logandroidruntime()
 {
     adb logcat -v time -s "AndroidRuntime,MEZ"
+}
+
+function android-stop {
+    echo "stopping $1"
+    adb shell am force-stop $1
 }
 
 function android-kill {
@@ -89,6 +101,23 @@ function android-avd-list {
 
 function android-signed {
     keytool -list -printcert -jarfile $1
+}
+
+function android-remove {
+    android-root-and-remount
+    files = (${adb shell pm list packages -f $1 | sed 's/package:\(.*\)=.*/\1/'})
+    for file ($files); do
+        echo "removing $file..."
+        adb pull $file $ADB_PULL_LOCATION
+	adb shell rm $file
+    done
+    echo "rebooting..."
+    adb reboot
+}
+
+function android-root-and-remount() {
+    echo "rooting and remounting..."
+    adb root && adb remount
 }
 
 function android-packages {
