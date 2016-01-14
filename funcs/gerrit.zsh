@@ -4,7 +4,10 @@ function gerrit-review {
         BRANCH=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD) | sed 's/^[a-z]*\///')
     fi  
 
-    P_REVIEWERS=("${(@f)$(ssh $SERVER_GERRIT -p $PORT_GERRIT gerrit ls-members $1 | awk '{print $2}' | grep -v username)}")
+    gerrit_server=$(git config --get gerrit.server)
+    gerrit_port=$(git config --get gerrit.port)
+
+    P_REVIEWERS=("${(@f)$(ssh $gerrit_server -p $gerrit_port gerrit ls-members $1 | awk '{print $2}' | grep -v username)}")
     local reviewers
     for reviewer in $P_REVIEWERS
         do reviewers="--reviewer=$reviewer $reviewers"
@@ -12,9 +15,10 @@ function gerrit-review {
     git push --receive-pack="git receive-pack $reviewers" origin HEAD:refs/for/$(echo -n "$BRANCH")
 }
 
-echo "$(ssh $SERVER_GERRIT -p $PORT_GERRIT gerrit ls-groups | grep -v '\s')" > ~/.reviewgroups
 _gerrit_review() {
-    compadd -X '======= Review Groups =======' `cat ~/.reviewgroups`
+    gerrit_server=$(git config --get gerrit.server)
+    gerrit_port=$(git config --get gerrit.port)
+    compadd -X '======= Review Groups =======' `ssh $gerrit_server -p $gerrit_port gerrit ls-groups | grep -v '\s'`
 }
 
 compdef _gerrit_review gerrit-review

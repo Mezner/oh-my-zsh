@@ -13,7 +13,7 @@ function clearlog()
 
 function android-alllogs() {
     adb logcat -v threadtime -b main -d > log-main.txt
-    adb logcat -v threadtime -b amazon_main -d > log-amazon_main.txt
+    adb logcat -v threadtime -d > log-merged_default.txt
     adb logcat -v threadtime -b radio -d > log-radio.txt
     adb logcat -v threadtime -b events -d > log-events.txt
 }
@@ -91,7 +91,7 @@ function android-avd-start {
     fi
     if [ ! -z $1 ]
     then
-        $ANDROID_SDK_TOOLS_PATH/emulator-x86 -avd $1 -netspeed full -netdelay none $2 &
+        $ANDROID_SDK_TOOLS_PATH/emulator-x86 -avd $1 -netspeed full -netdelay none -gpu off $2 &
     fi
 }
 
@@ -124,7 +124,12 @@ function android-packages {
     adb shell pm list packages -f $1
 }
 
-android-avd-list > ~/.androiddevices
+function android-screenshot {
+	adb shell /system/bin/screencap -p /sdcard/screenshot.png
+	adb pull /sdcard/screenshot.png screenshot.png
+}
+
+# android-avd-list > ~/.androiddevices
 
 _android_avd_start() {
     compadd -X "=== Android Devices ===" `cat ~/.androiddevices`
