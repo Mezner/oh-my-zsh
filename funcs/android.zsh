@@ -129,6 +129,10 @@ function android-screenshot {
 	adb pull /sdcard/screenshot.png screenshot.png
 }
 
+function android-restart-soft {
+    adb shell stop && adb shell start
+}
+
 # android-avd-list > ~/.androiddevices
 
 _android_avd_start() {

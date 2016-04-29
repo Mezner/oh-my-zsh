@@ -41,3 +41,8 @@ function resource()
 {
     source ~/.zshrc
 }
+
+function cdl
+{
+    cd $(readlink "$1")
+}
